@@ -29,7 +29,11 @@ namespace IdentityServerScratch
                 {
                     ClientId = "mvc",
                     ClientName = "MVC Client",
-                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },  
 
                     // where to redirect to after login
                     RedirectUris = { "http://localhost:5002/signin-oidc" },
@@ -40,8 +44,11 @@ namespace IdentityServerScratch
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
-                    }
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
+                    },
+
+                    AllowOfflineAccess = true
                 },
 
                 new Client
@@ -76,6 +83,18 @@ namespace IdentityServerScratch
                 {
                     SubjectId = "2",
                     Username = "bob",
+                    Password = "password"
+                },
+                new TestUser
+                {
+                    SubjectId = "3",
+                    Username = "cristobal",
+                    Password = "password"
+                },
+                new TestUser
+                {
+                    SubjectId = "4",
+                    Username = "tomas",
                     Password = "password"
                 }
             };

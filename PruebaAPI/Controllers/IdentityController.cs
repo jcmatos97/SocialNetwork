@@ -16,9 +16,9 @@ namespace PruebaAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var x = new { newe = "dd", message = "sss" };
-            //return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
-            return new JsonResult(x);
+            //var x = new { newe = "dd", message = "sss" };
+            return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+            //return new JsonResult(x);
         }
     }
 }

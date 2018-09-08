@@ -45,6 +45,8 @@ namespace PruebaAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
+
             app.UseMvc();
         }
     }

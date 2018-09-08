@@ -7,14 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 using ClientMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
 
 namespace ClientMVC.Controllers
 {
     public class HomeController : Controller
     {
-        
+
         public IActionResult Index()
         {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Secure()
+        {
+
+            ViewData["Message"] = "Message";
             return View();
         }
 
@@ -24,7 +34,6 @@ namespace ClientMVC.Controllers
             await HttpContext.SignOutAsync("oidc");
         }
 
-        [Authorize]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -35,13 +44,25 @@ namespace ClientMVC.Controllers
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> CallApiUsingUserAccessToken()
+        {
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+            var client = new HttpClient();
+            client.SetBearerToken(accessToken);
+            var content = await client.GetStringAsync("http://localhost:5001/identity");
+
+            ViewBag.Json = JArray.Parse(content).ToString();
+            return View();
         }
     }
 }
